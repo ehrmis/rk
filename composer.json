@@ -1,0 +1,17 @@
+{
+    "require": {
+        "filp/whoops": "~2.1",
+        "catfan/medoo": "~1.4",
+		"phpoffice/phpexcel": "~2.1",
+		"thenbsp/wechat": "~2.0"
+		},
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        },
+        {
+            "packagist": false
+        }
+    ]
+}

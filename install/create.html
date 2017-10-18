@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人力资源信息系统安装程序</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="./static/js/jquery-2.0.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./static/bootstrap-3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./static/bootstrap-3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="./static/font-awesome-4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./static/css/bjy.css">
+    <script type="text/javascript" src="./static/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="./static/js/html5shiv.min.js"></script>
+    <script type="text/javascript" src="./static/js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="./static/css/install.css">
+</head>
+<body>
+<?php
+/**
+ * 当前根目录域名20170615
+ */
+function root_url()
+{
+	$http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+	$port = $_SERVER["SERVER_PORT"];
+	//$myurl = $http_type.$_SERVER["SERVER_NAME"];
+	$myurl = $_SERVER["SERVER_NAME"];
+	if($port != "80" && $port != "443")
+	{
+		$myurl .= ":".$port;
+	}
+	$site = array("domain"=>$myurl);
+	$docu = $_SERVER["PHP_SELF"];
+	$array = explode("/",$docu);
+	$count = count($array);
+	$dir = "";
+	if($count>1)
+	{
+		foreach($array AS $key=>$value)
+		{
+			$value = trim($value);
+			if($value)
+			{
+				if(($key+1) < $count)
+				{
+					$dir .= "/".$value;
+				}
+			}
+		}
+	}
+	$dir .= "/";
+	$dir = str_replace(array("//","install/"),array("/",""),$dir);
+	$site["dir"] = $dir;
+	return $site;
+}
+$site = root_url();
+$site['title'] = "人力资源管理信息系统";
+
+?>
+<div id="nav">
+    <div class="inside">
+        <p class="name">HRmis<span>安装向导</span></p>
+        <ul class="schedule">
+            <li class="number">1</li>
+            <li class="word">使用协议</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">2</li>
+            <li class="word">环境检测</li>
+        </ul>
+        <ul class="schedule active">
+            <li class="number">3</li>
+            <li class="word">创建数据</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">4</li>
+            <li class="word">安装完成</li>
+        </ul>
+    </div>
+</div>
+<div id="out">
+    <div class="inside">
+        <div class="box create">
+            <form class="form-inline" action="./index.php?c=success" method="post" >
+                <h2>数据库及站点信息</h2>
+                <div class="one">
+                    <label class="control-label">数据库类型</label>
+                    <input class="form-control" type="text" name="DB_TYPE" value="mysql" disabled="disabled" />
+                </div>
+                <div class="one">
+                    <label class="control-label">数据库引擎</label>
+                    <input class="form-control" type="text" name="DB_ENGINE" value="pdo_mysql" disabled="disabled" />
+                </div>
+                <div class="one">
+                    <label class="control-label"> 数据库服务器</label>
+                    <input class="form-control" type="text" name="DB_HOST" value="localhost" />
+                </div>
+                <div class="one">
+                    <label class="control-label"> 数据库端口</label>
+                    <input class="form-control" type="text" name="DB_PORT" value="3306" />
+                </div>
+                <div class="one">
+                    <label class="control-label">数据库名</label>
+                    <input class="form-control" type="text" name="DB_NAME" value="hrmis" />
+                </div>
+                <div class="one">
+                    <label class="control-label">数据库用户名</label>
+                    <input class="form-control" type="text" name="DB_USER" value="root">
+                </div>
+                <div class="one">
+                    <label class="control-label"> 数据库密码</label>
+                    <input class="form-control" type="text" name="DB_PWD" value="root">
+                </div>
+               <div class="one">
+                    <label class="control-label"> 数据表前缀</label>
+                    <input class="form-control" type="text" name="DB_PREFIX" value="hr_" />
+                </div>
+<?php
+			echo <<<EOT
+                <div class="one">
+                    <label class="control-label">网站名称</label>
+			        <input class="form-control" type="text" name="title" value="{$site['title']}" />
+                </div>
+				<div class="one">
+                    <label class="control-label">网站域名</label>
+                    <input class="form-control" type="text" name="domain" value="{$site['domain']}" />
+					<p class="tips_p">不含 http://</p>
+                </div>
+				<div class="one">
+                    <label class="control-label">安装目录</label>
+                    <input class="form-control" type="text" name="dir" value="{$site['dir']}" />
+                    <p class="tips_p">根目录请设为 /</p>					
+                </div>	
+			
+			
+                <p class="agree">
+                    <a class="btn btn-primary" href="./index.php?c=test">上一步</a>
+                    <input class="btn btn-success" type="submit" value="确认" />
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="footer">
+  <p align="center">Powered By http://www.hezhubi.com 版权所有 &copy 2017 All right reserved.<a href="http://www.hezhubi.com/" target="_blank">人可工作室</a></p>
+</div>
+</body>
+</html>
+EOT;
+?>

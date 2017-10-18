@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>通用进度条</title>
+    <script src="http://s1.bdstatic.com/r/www/cache/static/jquery/jquery-1.10.2.min_f2fb5194.js"></script>
+	<!--职坐标舒克20170418提供-->
+    <style>
+        #loading{width: 99%;height: 20px; background: #f2f2f2;padding:5px;margin:auto;border-radius:30px;}
+        #loading div{height:20px;line-height:20px;font-size:10px;text-indent:2em;background:url(load.jpg) repeat;border: #86b300 solid 1px;border-radius: 10px;color: white;width:100px }
+
+    </style>
+</head>
+<body>
+<!--zen codeing emmet-->
+<!--.box-->
+<!--#box-->
+<!--ul+-->
+<!--ol+-->
+<!--ul>li.list$*10-->
+<!--.box>h2+p-->
+<!--html:5-->
+<dl class="container">
+    <dd id="loading">
+        <div>正在导入数据中....</div>
+    </dd>
+</dl>
+
+</body>
+</html>
+
+<script>
+    $("#loading div").animate({width:"99%"},"slow")
+    $(document).ready(function () {
+        $("#loading").fadeOut()
+    })
+</script>

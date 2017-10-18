@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<title>人力资源信息系统安装程序</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" src="./static/js/jquery-2.0.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./static/bootstrap-3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="./static/bootstrap-3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css" href="./static/font-awesome-4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="./static/css/bjy.css">
+<script type="text/javascript" src="./static/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="./static/js/html5shiv.min.js"></script>
+<script type="text/javascript" src="./static/js/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" href="./static/css/install.css">
+<style>
+    #loading{width: 100%;height: 40px; background: #f2f2f2;padding:5px;margin:auto;border-radius:30px;}
+    #loading div{height:20px;line-height:20px;font-size:10px;text-indent:2em;background:url(load.jpg) repeat;border: #86b300 solid 1px;border-radius: 10px;color: white;width:100px }
+</style>
+<script>
+    $("#loading div").animate({width:"100%"},"slow")
+    $(document).ready(function () {
+        $("#loading").fadeOut()
+    })
+</script>
+</head>
+<body>
+<div id="nav">
+    <div class="inside">
+        <p class="name">HRmis<span>安装向导</span></p>
+        <ul class="schedule">
+            <li class="number">1</li>
+            <li class="word">使用协议</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">2</li>
+            <li class="word">环境检测</li>
+        </ul>
+        <ul class="schedule">
+            <li class="number">3</li>
+            <li class="word">创建数据</li>
+        </ul>
+        <ul class="schedule active">
+            <li class="number">4</li>
+            <li class="word">安装完成</li>
+        </ul>
+    </div>
+</div>
+<br /><br />
+<dl class="container">
+          <dd id="loading">
+          <div>正在导入数据中....</div>	 
+          </dd>
+</dl>
+
+ <?php
+ //包含配置文件
+        require_once '../core/config/config.php';
+        $dbms = 'mysql';     //数据库类型
+        $host = _host; //数据库主机名
+        $dbname = _dbname;    //*使用的数据库
+        $dbuser = _user;      //*数据库连接用户名
+        $dbpassword = _password;   //*对应的密码
+        $dsn = "$dbms:host=$host;dbname=$dbname";
+//需要安装前先安装ISP提供的数据库
+        try {
+            $pdo = new PDO($dsn, $dbuser, $dbpassword);
+        } catch (PDOException $e) {
+            echo '程序运行异常:' . $e->getMessage();		
+        }
+		// 试创建数据库并选中
+        $create_sql = 'CREATE DATABASE IF NOT EXISTS ' . $data['DB_NAME'] . ' DEFAULT CHARACTER SET utf8;';
+        $pdo->query($create_sql) or die('请先创建ISP提供的空数据库再安装！');
+		// 设置字符集
+		$pdo->exec('SET NAMES utf8');       
+	    $sqlFile = 'install.sql';
+		if (!is_file($sqlFile)) {
+			echo '缺少数据库安装文件!';
+		exit;
+		}		
+		// 连接数据库后安装初始数据库表20170514             
+        //导入sql数据并创建表
+		require './loading.html';
+        $hr_str = file_get_contents('./install.sql');
+        $sql_array = preg_split("/;[\r\n]+/", str_replace('hr_', $data['DB_PREFIX'], $hr_str));
+        foreach ($sql_array as $k => $v) {
+            if (!empty($v)) {
+                $pdo->query($v);
+            }
+        }
+        $pdo = null;
+        @touch('./install.lock');
+?>
+
+<br /><br /><br /><br />
+<div id="out" align="center" >
+    <div class="inside">
+        <div class="box agreement">
+		<h2>恭喜您安装成功</h2><br /><br />
+		<h1><img src="complete.png"></h1><br />            
+            <p class="content">
+                <span class="admin_hint">默认账号：admin &emsp; 初始密码为：123456</span>
+                <br /><br />
+				<section class="section">
+                <div class="">
+               
+                </div>
+                </section>               
+            </p>
+        </div>
+    </div>
+</div>
+<div id="footer">
+  <p align="center">Powered By http://www.hezhubi.com 版权所有 &copy 2017 All right reserved.<a href="http://www.hezhubi.com/" target="_blank">人可工作室</a></p>
+</div>
+</body>
+</html>
